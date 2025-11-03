@@ -1,7 +1,19 @@
 # Scaling Offline Model-Based RL with Action chunking
 
 This repository contains the official implementation of [Scalable Offline Model-Based RL with Action chunking](TODO).
-Moreover, we also provide implementations of 1) model-free methods, 2) model-based methods, 3) MAC, and ablated version of MAC for ablation studies. Specifically: 
+
+If you use this code for your research, please consider citing our paper:
+```
+@article{park2025_MAC,
+  title={Scalable Offline Model-Based RL with Action Chunking},
+  author={Kwanyoung Park, Seohong Park, Youngwoon Lee, Sergey Levine},
+  journal={arXiv Preprint TODO},
+  year={2025}
+}
+```
+
+## Overview
+This codebase contains implementations of 1) model-free methods, 2) model-based methods, 3) MAC, and ablated version of MAC for ablation studies. Specifically: 
 
 ```
 # Baselines (Model-free)
@@ -22,16 +34,6 @@ from agents.mbfql import MBFQLAgent         # MAC (FQL)
 from agents.model_ac import ACModelAgent    # Model inaccuracy analysis
 ```
 
-If you use this code for your research, please consider citing our paper:
-```
-@article{park2025_MAC,
-  title={Scalable Offline Model-Based RL with Action Chunking},
-  author={Kwanyoung Park, Seohong Park, Youngwoon Lee, Sergey Levine},
-  journal={arXiv Preprint TODO},
-  year={2025}
-}
-```
-
 ## Installation
 
 Please install the libraries using `requirements.txt`:
@@ -45,6 +47,8 @@ pip install -r requirements.txt
 For downloading the datasets, please follow the instruction of [Horizon Reduction Makes RL Scalable](https://github.com/seohongpark/horizon-reduction).
 
 ## Example training scripts 
+
+For MVE-based MBRL algorithms (MAC, LEQ, FMPC) and model-free RL algorithms (SHARSA, GCIQL, n-step GCSAC+BC):
 
 ```
 # MAC in puzzle-4x5-play-oraclerep-v0 (100M)
