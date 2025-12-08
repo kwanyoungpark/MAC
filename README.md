@@ -7,7 +7,7 @@ If you use this code for your research, please consider citing our paper:
 @article{park2025_MAC,
   title={Scalable Offline Model-Based RL with Action Chunking},
   author={Kwanyoung Park, Seohong Park, Youngwoon Lee, Sergey Levine},
-  journal={arXiv Preprint TODO},
+  journal={arXiv Preprint},
   year={2025}
 }
 ```
