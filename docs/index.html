@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="LEQ (Lower Expectile Q-learning) enables learning long-horizon tasks offline">
+  <meta name="keywords" content="LEQ, Offline RL, Model-based, Expectile regression">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> Scalable Offline Model-Based RL with Action Chunks </title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title"> Scalable Offline Model-Based RL with <br> Action Chunks </h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://kwanyoungpark.github.io">Kwanyoung Park</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://seohong.me">Seohong Park</a><sup>1</sup> ,</span>
+            <span class="author-block">
+              <a href="https://youngwoon.github.io">Youngwoon Lee</a><sup>2</sup>,</span>
+            <span class="author-block">
+              <a href="https://people.eecs.berkeley.edu/~svlevine/">Sergey Levine</a><sup>1</sup></span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">UC Berkeley<sup>1</sup>, Yonsei University<sup>2</sup></span>
+          </div>
+
+
+    <table style="border-collapse:separate;border-spacing:0.5cm;">
+    <tr>
+      <td width="25%">
+      </td>
+      <td width="50%">
+        <video id="teaser" autoplay muted loop playsinline width="100%">
+          <source src="./static/videos/MAC-fast.mp4" type="video/mp4">
+        </video>
+      </td>
+      <td width="25%">
+      </td>
+    </tr>
+    </table>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- arXiv Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2407.00699"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/kwanyoungpark/LEQ"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero is-light">
+  <div class="container is-max-desktop">
+    <br>
+    <h2 class="title is-3 ">Abstract</h2>
+    <ul class="a">
+      <li> <strong>Model-Based RL with Action Chunks (MAC)</strong> is a simple yet powerful offline model-based RL method that leverages <strong>100-step model rollouts</strong> for value estimation, by utilizing rejection sampling from an expressive, flow-based, action-chunked behavior cloning (BC) policy.
+      <li> <strong>MAC is simple and robust to hyperparameters</strong>, making it easy to implement and adapt to other domains.
+      <li> <strong>MAC achieves strong performance and scales effectively to large datasets.</strong> It attains state-of-the-art results on the standard OGBench manipulation benchmark, and significantly outperform prior model-based approaches on 100M-scale datasets.
+    </ul>
+    <br>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop", style="margin-top:-0.5cm;margin-bottom:-0.5cm">
+    <h2 class="title is-3 ">Challenges</h2>
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px;">  
+      <!-- Left: text -->
+      <div style="flex: 1;">
+        <ul class="a">
+          <li>Long-horizon tasks require long-horizon rollouts, since the bias introduced by bootstrapping in value updates accumulates over time.</li>
+          <li>This creates a unique challenge in model-based RL, where prediction errors from the learned world model accumulate over time.</li>
+          <li>Therefore, we need methods to perform long-horizon rollouts while keeping model prediction errors small.</li>
+        </ul>
+      </div>
+
+      <!-- Right: video -->
+      <div style="flex-shrink: 0;">
+        <video width="320" height="180" controls>
+          <source src="./static/videos/MAC-3.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero is-light" id="Method">
+  <br>
+  <div class="container is-max-desktop">
+    <h3 class="title is-3">Model-based RL with Action Chunking (MAC)</h3>
+    <ul class="a">
+      <li> In this paper, we do not try to improve the world model to address this issue.
+      <li> Rather, we mitigate the inaccuracy of the world model by changing how we model the policy (actions). 
+    </ul>
+    <br>
+    <h2 class="title is-4" style="margin-bottom:0.5cm;">Action chunking</h2>
+    <td id="Antmaze_results">
+      <div style="text-align: center;">
+        <video id="teaser" autoplay muted loop playsinline width="95%">
+          <source src="./static/videos/MAC-1.mp4" type="video/mp4">
+        </video>
+      </div>
+      <ul class="a" style="margin-top:5px">
+        <li> We utilize action-chunked policy, critic, and world model instead of single-step models.
+        <li> Action chunking reduces the number of model execution, mitigating the compounding error problem. </li>
+        <li> However, this introduces several challenges: 
+            <p> - Action-chunk distributions are multi-modal and complex for gaussian policies. </p>
+            <p> - It becomes harder to prevent the policy from exploiting the world model, as they have more dimensions. </p> 
+        </li>
+      </ul>
+    </td>
+    <br>
+    <br>
+    <h2 class="title is-4" style="margin-bottom:0cm;">Flow rejection sampling</h2>
+    <br>
+    <td id="Antmaze_results">
+      <!--/img src="./static/images/lambda-return.png" width="100%"-->
+      <div style="text-align: center;">
+        <video id="teaser" autoplay muted loop playsinline width="98%">
+          <source src="./static/videos/MAC-2.mp4" type="video/mp4">
+        </video>
+      </div>
+      <ul class="a" style="margin-top:5px">
+        <li> To handle these challenges, we employ rejection sampling from an flow behavioral action chunk policy. </li>
+        <li> This formulation ensures that the action chunk is in-distribution and expressive enough to model the behavioral policy. </li>
+        <li> As rejection sampling is generally more robust to hyperparameters, we use a single hyperparameter set for our method-related hyperparameters, constrast to prior model-based works. 
+      </ul>
+    </td>
+    <br>
+  </div>
+</section>
+
+
+<section class="section" id="Experiment">
+  <div class="container is-max-desktop", style="margin-top:-0.5cm">
+   <h3 class="title is-3">Experiments</h3>
+  </div>
+  <br>
+  <div class="container is-max-desktop", style="margin-bottom:-0.5cm">
+    <h2 class="title is-4" style="margin-bottom:0.5cm;">Long-horizon tasks with 100M-scale dataset</h2>
+      <td id="Antmaze_results">
+        <img src="./static/images/MAC-large.png" width="100%" style="margin-left:0cm;margin-right:0cm">
+      </td>
+      <ul class="a" style="margin-top: 5px">
+        <li> <strong>MAC significantly outperforms</strong> the prior model-based approaches in all tasks.
+        <li> MAC also outperforms model-free baselines in manipulation tasks. 
+        <li> This experiments shows the <strong> scalability of MAC </strong> to large datasets.
+      </ul>
+    <br>
+    <h2 class="title is-4" style="margin-bottom:0.5cm;">Reward-based benchmarks with 1M-scale dataset</h2>
+      <td id="Antmaze_results">
+        <img src="./static/images/MAC-reward.png" width="100%" style="margin-left:0cm;margin-right:0cm">
+      </td>
+      <ul class="a" style="margin-top: 5px">
+        <li> <strong> MAC outperforms all other baselines </strong> in standard single-task benchmarks (except puzzle-3x3).
+        <li> These experiments shows capability of MAC in standard small-data regime. 
+      </ul>
+  </div>
+</section>
+
+
+<section class="hero is-light">
+  <div class="container is-max-desktop">
+    <br>
+    <h2 class="title is-3">BibTeX</h2>
+  </div>
+  <br>
+  <div class="container is-max-desktop">
+    <div class="bibtex box">
+      <pre><code>@inproceedings{park2025leq,
+  title={Model-based Offline Reinforcement Learning with Lower Expectile Q-learning},
+  author={Kwanyoung Park and Youngwoon Lee},
+  booktitle={The Thirteenth International Conference on Learning Representations},
+  year={2025},
+}</code></pre>
+    </div>
+  </div>
+</section>
+
+
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            The website template is from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
