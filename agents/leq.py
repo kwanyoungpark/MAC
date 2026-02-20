@@ -92,7 +92,7 @@ class LEQAgent(flax.struct.PyTreeNode):
         return success - 1.0, success
 
     def critic_loss(self, batch, grad_params, rng):
-    	"""Compute the critic loss of LEQ (mostly copied from the original implementation)"""
+        """Compute the critic loss of LEQ (mostly copied from the original implementation)"""
         rng, keys = jax.random.split(rng)
         expectile = self.config['expectile']
         num_repeat = self.config['num_repeat']

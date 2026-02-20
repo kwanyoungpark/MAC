@@ -79,7 +79,7 @@ class MOPOAgent(flax.struct.PyTreeNode):
         }
 
     def actor_loss(self, batch, grad_params, rng):
-    	"""Compute actor loss of MOPO (SAC with target entropy)"""
+        """Compute actor loss of MOPO (SAC with target entropy)"""
         dist = self.network.select('actor')(batch['observations'], goals=batch['actor_goals'], params=grad_params)
         actions, log_probs = dist.sample_and_log_prob(seed=rng)
        

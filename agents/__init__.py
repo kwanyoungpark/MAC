@@ -27,7 +27,7 @@ agents = dict(
     mopo=MOPOAgent,
     mobile=MOBILEAgent,
 
-    mbfrs_ac=ACMBFRSAgent,
+    mac=MACAgent,
 
     mbrs_ac=ACMBRSAgent,
     mbfql=MBFQLAgent,

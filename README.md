@@ -56,6 +56,9 @@ python main.py --env_name=puzzle-4x5-play-oraclerep-v0 --dataset_dir=<YOUR_DATA_
 
 # SHARSA in puzzle-4x5-play-oraclerep-v0 (100M)
 python main.py --env_name=puzzle-4x5-play-oraclerep-v0 --dataset_dir=<YOUR_DATA_DIRECTORY>/puzzle-4x5-play-100m-v0 --agent=agents/sharsa.py
+
+# MAC in cube-double-play-singletask-task2-v0 (default dataset)
+python main.py --env_name=cube-double-play-singletask-task2-v0 --dataset_dir=<YOUR_DATA_DIRECTORY>/cube-double-play-singletask-v0 --agent=agents/mac.py
 ```
 
 For MBPO-based algorithms (MOPO, MOBILE):

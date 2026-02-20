@@ -424,6 +424,50 @@ class ActorVectorField(nn.Module):
 
         return v
 
+class DynamicsVectorField(nn.Module):
+    """Dynamics vector field for flow dynamics model.
+
+    Attributes:
+        hidden_dims: Hidden layer dimensions.
+        ob_dim: Observation dimension.
+        mlp_class: MLP class.
+        activate_final: Whether to apply activation to the final layer.
+        layer_norm: Whether to apply layer normalization.
+    """
+
+    hidden_dims: Sequence[int]
+    output_dim: int
+    mlp_class: Any = MLP
+    activate_final: bool = False
+    layer_norm: bool = False
+
+    def setup(self) -> None:
+        self.mlp = self.mlp_class(
+            (*self.hidden_dims, self.output_dim), activate_final=False, layer_norm=self.layer_norm
+        )
+
+    @nn.compact
+    def __call__(self, observations, actions, next_observations, times=None):
+        """Return the current vector.
+
+        Args:
+            observations: Observations.
+            actions: Actions.
+            actions: Current next observations.
+            times: Current times (optional).
+        """
+        inputs = jnp.concatenate([observations, actions], axis=-1)
+        if times is None:
+            inputs = jnp.concatenate([inputs, next_observations], axis=-1)
+        else:
+            inputs = jnp.concatenate([inputs, next_observations, times], axis=-1)
+
+        v = self.mlp(inputs)
+
+        return v
+
+
+
 class ConvBlock(nn.Module):
     ch: int
 
